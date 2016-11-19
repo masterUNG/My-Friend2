@@ -20,6 +20,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ImageView avataImageView, takePhotoImageView;
     private Button button;
     private String nameString, userString, passwordString;
+    private Uri uri;
 
 
     @Override
@@ -70,6 +71,17 @@ public class SignUpActivity extends AppCompatActivity {
             }   // onClick
         });
 
+        //avata Controller
+        avataImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
+
+
     }   // Main Method
 
     @Override
@@ -84,7 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
             Log.d("19novV1", "Take Photo OK");
 
             //Setup Image Take to ImageView
-            Uri uri = data.getData();
+            uri = data.getData();
 
             try {
 
