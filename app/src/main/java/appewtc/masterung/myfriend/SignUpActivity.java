@@ -79,6 +79,10 @@ public class SignUpActivity extends AppCompatActivity {
 
                     uploadImageToServer();
 
+                    //upLoad String to Server
+                    uploadStringToServer();
+
+
                 }
 
             }   // onClick
@@ -110,6 +114,35 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }   // Main Method
+
+    private void uploadStringToServer() {
+
+        try {
+
+            String strURL = "http://swiftcodingthai.com/20nov/add_user_master.php";
+            AddUserToServer addUserToServer = new AddUserToServer(
+                    SignUpActivity.this,
+                    nameString,
+                    userString,
+                    passwordString,
+                    "http://swiftcodingthai.com/20nov/Image" + imageNameString);
+            addUserToServer.execute(strURL);
+
+            boolean bolResult = Boolean.parseBoolean(addUserToServer.get());
+            Log.d("20novV2", "Result ==> " + bolResult);
+
+            if (bolResult) {
+                finish();
+            } else {
+                Toast.makeText(SignUpActivity.this, "Upload False", Toast.LENGTH_SHORT).show();
+            }
+
+
+        } catch (Exception e) {
+            Log.d("20novV2", "e upload ==> " + e.toString());
+        }
+
+    }
 
     private void uploadImageToServer() {
 
