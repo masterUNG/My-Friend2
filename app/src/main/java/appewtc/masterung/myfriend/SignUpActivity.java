@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +14,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import org.jibble.simpleftp.SimpleFTP;
+
+import java.io.File;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -71,6 +77,8 @@ public class SignUpActivity extends AppCompatActivity {
                     imageNameString = imagePathString.substring(imagePathString.lastIndexOf("/"));
                     Log.d("20novV1", "imageName ==> " + imageNameString);
 
+                    uploadImageToServer();
+
                 }
 
             }   // onClick
@@ -102,6 +110,34 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }   // Main Method
+
+    private void uploadImageToServer() {
+
+        //Change Policy
+        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy
+                .Builder().permitAll().build();
+        StrictMode.setThreadPolicy(threadPolicy);
+
+        //upLoad
+        try {
+
+            SimpleFTP simpleFTP = new SimpleFTP();
+            simpleFTP.connect("ftp.swiftcodingthai.com", 21,
+                    "20nov@swiftcodingthai.com", "Abc12345");
+            simpleFTP.bin();
+            simpleFTP.cwd("Image");
+            simpleFTP.stor(new File(imagePathString));
+            simpleFTP.disconnect();
+
+            Toast.makeText(SignUpActivity.this, "Upload Image Finish", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Log.d("20novV1", "e simpliFTP ==> " + e.toString());
+        }
+
+
+
+    }   // upLoad
 
     private String myFindPathImage() {
 
