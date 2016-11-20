@@ -3,6 +3,7 @@ package appewtc.masterung.myfriend;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUserPassword() {
 
-    }
+        String strResult = null;
+
+        try {
+
+            GetUser getUser = new GetUser(MainActivity.this);
+            getUser.execute();
+            strResult = getUser.get();
+            Log.d("20novV3", "strResult ==> " + strResult);
+
+        } catch (Exception e) {
+            Log.d("20novV3", "e checkUser ==> " + e.toString());
+        }
+
+    }   // checkUser
 
 }   // Main Class
