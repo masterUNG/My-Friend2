@@ -76,7 +76,9 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, "โปรดเลือกแอฟดูรูป"), 1);
 
             }
         });
@@ -105,6 +107,19 @@ public class SignUpActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.d("19novV1", "e ==> " + e.toString());
+            }   // try
+
+        } else if ((requestCode == 1) && (resultCode == RESULT_OK)) {
+
+            uri = data.getData();
+
+            try {
+
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                avataImageView.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                Log.d("20novV1", "e ==> " + e.toString());
             }   // try
 
         }   // if
