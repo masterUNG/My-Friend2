@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     //Explicit
@@ -61,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUserPassword() {
 
-        String strResult = null;
+        String strResult = null, strTruePassword = null;
+        boolean bolStatus = true;
 
         try {
 
@@ -69,6 +73,36 @@ public class MainActivity extends AppCompatActivity {
             getUser.execute();
             strResult = getUser.get();
             Log.d("20novV3", "strResult ==> " + strResult);
+
+            JSONArray jsonArray = new JSONArray(strResult);
+
+            for (int i=0;i<jsonArray.length();i++) {
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                if (userString.equals(jsonObject.getString("User"))) {
+
+                    bolStatus = false;
+                    strTruePassword = jsonObject.getString("Password");
+
+                }
+            }   // for
+
+            if (bolStatus) {
+                MyAlert myAlert = new MyAlert(MainActivity.this,
+                        R.drawable.rat48, "User False", "No this User in my Database");
+                myAlert.myDialog();
+            } else if (passwordString.equals(strTruePassword)) {
+
+                startActivity(new Intent(MainActivity.this, FriendListView.class));
+
+            } else {
+                MyAlert myAlert = new MyAlert(MainActivity.this,
+                        R.drawable.rat48, "Password False", "Please Try Again");
+                myAlert.myDialog();
+            }
+
+
 
         } catch (Exception e) {
             Log.d("20novV3", "e checkUser ==> " + e.toString());
