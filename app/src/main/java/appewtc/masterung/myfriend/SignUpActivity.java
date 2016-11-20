@@ -1,12 +1,13 @@
 package appewtc.masterung.myfriend;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +20,10 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText nameEditText, userEditText, passwordEditText;
     private ImageView avataImageView, takePhotoImageView;
     private Button button;
-    private String nameString, userString, passwordString;
+    private String nameString, userString, passwordString,
+            imagePathString, imageNameString;
     private Uri uri;
+    private boolean aBoolean = true;
 
 
     @Override
@@ -54,7 +57,21 @@ public class SignUpActivity extends AppCompatActivity {
                             "Have Space", "Please Fill All Every Blank");
                     myAlert.myDialog();
 
-                }   // if
+                } else if (aBoolean) {
+                    //No Image
+                    MyAlert myAlert = new MyAlert(SignUpActivity.this, R.drawable.bird48,
+                            "ยังไม่มีรูป", "กรุณา ถ่ายรูป หรือ เลือกรูปด้วยคะ");
+                    myAlert.myDialog();
+                } else {
+
+                    //Have Image
+                    //Find Path Image
+                    imagePathString = myFindPathImage();
+                    Log.d("20novV1", "imagePath ==> " + imagePathString);
+                    imageNameString = imagePathString.substring(imagePathString.lastIndexOf("/"));
+                    Log.d("20novV1", "imageName ==> " + imageNameString);
+
+                }
 
             }   // onClick
         });
@@ -86,6 +103,26 @@ public class SignUpActivity extends AppCompatActivity {
 
     }   // Main Method
 
+    private String myFindPathImage() {
+
+        String result = null;
+        String[] strings = new String[]{MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, strings, null, null, null);
+
+        if (cursor != null) {
+
+            cursor.moveToFirst();
+            int i = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            result = cursor.getString(i);
+
+        } else {
+            result = uri.getPath();
+        }
+
+
+        return result;
+    }
+
     @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode,
@@ -99,6 +136,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             //Setup Image Take to ImageView
             uri = data.getData();
+            aBoolean = false;
 
             try {
 
@@ -112,6 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
         } else if ((requestCode == 1) && (resultCode == RESULT_OK)) {
 
             uri = data.getData();
+            aBoolean = false;
 
             try {
 
@@ -122,7 +161,11 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.d("20novV1", "e ==> " + e.toString());
             }   // try
 
+
+
+
         }   // if
+
 
     } // onActivityResult
 
